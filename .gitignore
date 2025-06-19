@@ -1,0 +1,34 @@
+# Node
+node_modules/
+dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+
+# Examples & Tests
+test/
+tests/
+__tests__/
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Build
+coverage/
+
+# Env
+.env
+.env.*
+
+# Others
+package-lock.json
+yarn.lock
+npm-debug.log 
