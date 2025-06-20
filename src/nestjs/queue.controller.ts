@@ -22,4 +22,4 @@ export class QueueController {
   async getQueues() {
     return this.queueService.getQueues();
   }
-} 
+}

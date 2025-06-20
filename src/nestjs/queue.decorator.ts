@@ -9,4 +9,4 @@ export interface QueueWorkerMetadata {
 }
 
 export const ProcessJob = (queue: string, options?: WorkerOptions) =>
-  SetMetadata(QUEUE_WORKER_METADATA, { queue, options }); 
+  SetMetadata(QUEUE_WORKER_METADATA, { queue, options });

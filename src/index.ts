@@ -1,15 +1,14 @@
 // Core exports
-export { QueueManager } from './core/queue-manager';
+export * from './core/queue-manager';
 export * from './core/types';
 
-// NestJS exports
-export { QueueModule } from './nestjs/queue.module';
-export { QueueService } from './nestjs/queue.service';
-export { ProcessJob, QUEUE_WORKER_METADATA } from './nestjs/queue.decorator';
-export type { QueueWorkerMetadata } from './nestjs/queue.decorator';
+// NestJS integration
+export * from './nestjs/queue.service';
+export * from './nestjs/queue.module';
+export * from './nestjs/queue.controller';
+export * from './nestjs/queue.decorator';
+export * from './nestjs/queue-handler.discovery';
 
-// Config exports
-export { ConfigLoader } from './config/config-loader';
-
-// Utils exports
-export { Logger } from './utils/logger'; 
+// Utilities
+export * from './utils/logger';
+export * from './config/config-loader';

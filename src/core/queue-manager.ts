@@ -66,15 +66,15 @@ export class QueueManager extends EventEmitter {
   private async initialize(): Promise<void> {
     try {
       this.logger.info('Starting QueueManager initialization...');
-      
+
       await this.boss.start();
-      
+
       // 等待表创建完成
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       this.isInitialized = true;
       this.logger.info('QueueManager initialized successfully');
-      
+
       // 重新注册所有处理器
       for (const [queue, metadata] of this.handlers) {
         await this.registerWorker(queue, metadata.handler, metadata.options);
@@ -147,7 +147,7 @@ export class QueueManager extends EventEmitter {
 
         try {
           await handler(job.data);
-          
+
           const processingTime = Date.now() - startTime;
           this.metrics.completedJobs++;
           this.metrics.processingJobs--;
@@ -159,7 +159,7 @@ export class QueueManager extends EventEmitter {
           this.metrics.failedJobs++;
           this.metrics.processingJobs--;
           this.updateErrorRate();
-          
+
           this.logger.error(`Error processing job in queue ${queue}:`, error);
           this.emit('job:failed', job.id, queue, error);
           throw error;
@@ -167,17 +167,22 @@ export class QueueManager extends EventEmitter {
       };
 
       const workOptions: PgBoss.WorkOptions = {
-        includeMetadata: options.includeMetadata || this.config.queue?.includeMetadata || false,
+        includeMetadata:
+          options.includeMetadata ||
+          this.config.queue?.includeMetadata ||
+          false,
       };
 
       const workerId = await this.boss.work(queue, workOptions, wrappedHandler);
-      
+
       this.workers.set(queue, workerId);
       this.handlers.set(queue, { queue, handler, options });
-      
-      this.logger.debug(`Worker registered for queue ${queue} with ID: ${workerId}`);
+
+      this.logger.debug(
+        `Worker registered for queue ${queue} with ID: ${workerId}`,
+      );
       this.emit('worker:started', workerId, queue);
-      
+
       return workerId;
     } catch (error) {
       this.logger.error(`Failed to register worker for queue ${queue}:`, error);
@@ -198,7 +203,7 @@ export class QueueManager extends EventEmitter {
       if (typeof jobId !== 'string') {
         throw new Error(`Failed to schedule job for queue ${queue}`);
       }
-      
+
       this.logger.debug(`Scheduled job for queue ${queue} with ID: ${jobId}`);
       return jobId;
     } catch (error) {
@@ -246,14 +251,13 @@ export class QueueManager extends EventEmitter {
 
   async getMetrics(): Promise<QueueMetrics> {
     await this.waitForInitialization();
-    
+
     try {
-      const queues = await this.boss.getQueues();
-      
       // 计算吞吐量（每分钟处理的任务数）
       const timeWindow = 60000; // 1分钟
-      this.metrics.throughput = this.metrics.completedJobs / (timeWindow / 1000);
-      
+      this.metrics.throughput =
+        this.metrics.completedJobs / (timeWindow / 1000);
+
       return {
         ...this.metrics,
         queueSize: this.metrics.queueSize,
@@ -266,11 +270,11 @@ export class QueueManager extends EventEmitter {
 
   async getHealthStatus(): Promise<HealthStatus> {
     await this.waitForInitialization();
-    
+
     try {
       const queues = await this.boss.getQueues();
       const metrics = await this.getMetrics();
-      
+
       const status: HealthStatus = {
         status: 'healthy',
         database: {
@@ -278,7 +282,7 @@ export class QueueManager extends EventEmitter {
         },
         queues: {
           total: queues.length,
-          active: queues.filter(q => q.name !== '__pgboss__send-it').length,
+          active: queues.filter((q) => q.name !== '__pgboss__send-it').length,
         },
         workers: {
           total: this.workers.size,
@@ -288,7 +292,8 @@ export class QueueManager extends EventEmitter {
       };
 
       // 检查错误率
-      if (metrics.errorRate > 0.1) { // 10% 错误率阈值
+      if (metrics.errorRate > 0.1) {
+        // 10% 错误率阈值
         status.status = 'degraded';
       }
 
@@ -300,7 +305,8 @@ export class QueueManager extends EventEmitter {
 
       return status;
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      const errorMessage =
+        error instanceof Error ? error.message : 'Unknown error';
       return {
         status: 'unhealthy',
         database: {
@@ -331,7 +337,8 @@ export class QueueManager extends EventEmitter {
   }
 
   private updateQueueSize(queue: string, delta: number): void {
-    this.metrics.queueSize[queue] = (this.metrics.queueSize[queue] || 0) + delta;
+    this.metrics.queueSize[queue] =
+      (this.metrics.queueSize[queue] || 0) + delta;
     if (this.metrics.queueSize[queue] < 0) {
       this.metrics.queueSize[queue] = 0;
     }
@@ -339,8 +346,9 @@ export class QueueManager extends EventEmitter {
 
   private updateAverageProcessingTime(processingTime: number): void {
     const total = this.metrics.completedJobs;
-    this.metrics.averageProcessingTime = 
-      (this.metrics.averageProcessingTime * (total - 1) + processingTime) / total;
+    this.metrics.averageProcessingTime =
+      (this.metrics.averageProcessingTime * (total - 1) + processingTime) /
+      total;
   }
 
   private updateErrorRate(): void {
@@ -349,4 +357,4 @@ export class QueueManager extends EventEmitter {
       this.metrics.errorRate = this.metrics.failedJobs / total;
     }
   }
-} 
+}

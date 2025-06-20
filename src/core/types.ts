@@ -106,4 +106,4 @@ export interface QueueEvents {
   'worker:stopped': (workerId: string, queue: string) => void;
   'queue:created': (queue: string) => void;
   'queue:deleted': (queue: string) => void;
-} 
+}

@@ -1,6 +1,16 @@
-import { Injectable, Inject, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  OnModuleInit,
+  OnModuleDestroy,
+} from '@nestjs/common';
 import { QueueManager } from '../core/queue-manager';
-import { QueueSDKConfig, JobOptions, WorkerOptions, JobHandler } from '../core/types';
+import {
+  QueueSDKConfig,
+  JobOptions,
+  WorkerOptions,
+  JobHandler,
+} from '../core/types';
 import { Logger } from '../utils/logger';
 
 @Injectable()
@@ -8,9 +18,7 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
   private queueManager: QueueManager;
   private readonly logger = new Logger('QueueService');
 
-  constructor(
-    @Inject('QUEUE_CONFIG') private readonly config: QueueSDKConfig,
-  ) {
+  constructor(@Inject('QUEUE_CONFIG') private readonly config: QueueSDKConfig) {
     this.queueManager = new QueueManager(config, this.logger);
   }
 
@@ -77,4 +85,4 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
   getQueueManager(): QueueManager {
     return this.queueManager;
   }
-} 
+}
