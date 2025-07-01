@@ -9,6 +9,8 @@ import {
   JobHandlerMetadata,
   QueueMetrics,
   HealthStatus,
+  JobStateInfo,
+  JobInfo,
 } from './types';
 
 export class QueueManager extends EventEmitter {
@@ -234,10 +236,23 @@ export class QueueManager extends EventEmitter {
     }
   }
 
-  async getJobState(queue: string, jobId: string): Promise<string | null> {
+  async getJobState(
+    queue: string,
+    jobId: string,
+  ): Promise<JobStateInfo | null> {
     try {
       const job = await this.boss.getJobById(queue, jobId);
-      return job?.state || null;
+
+      if (!job) {
+        return null;
+      }
+
+      return {
+        status: job.state || null,
+        startedOn: job.startedOn || null,
+        createdOn: job.createdOn || null,
+        completedOn: job.completedOn || null,
+      };
     } catch (error) {
       this.logger.error(`Failed to get job state for ${jobId}:`, error);
       return null;
@@ -355,6 +370,16 @@ export class QueueManager extends EventEmitter {
     const total = this.metrics.completedJobs + this.metrics.failedJobs;
     if (total > 0) {
       this.metrics.errorRate = this.metrics.failedJobs / total;
+    }
+  }
+
+  async getJobInfo(queue: string, jobId: string): Promise<JobInfo | null> {
+    try {
+      const job = await this.boss.getJobById(queue, jobId);
+      return job || null;
+    } catch (error) {
+      this.logger.error(`Failed to get job info for ${jobId}:`, error);
+      return null;
     }
   }
 }

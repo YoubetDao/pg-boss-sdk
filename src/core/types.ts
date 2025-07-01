@@ -107,3 +107,21 @@ export interface QueueEvents {
   'queue:created': (queue: string) => void;
   'queue:deleted': (queue: string) => void;
 }
+
+// 任务状态信息
+export interface JobStateInfo {
+  status:
+    | 'created'
+    | 'retry'
+    | 'active'
+    | 'completed'
+    | 'cancelled'
+    | 'failed'
+    | null;
+  startedOn: Date | null;
+  createdOn: Date | null;
+  completedOn: Date | null;
+}
+
+// 任务详细信息类型
+export type JobInfo = PgBoss.JobWithMetadata<any>;

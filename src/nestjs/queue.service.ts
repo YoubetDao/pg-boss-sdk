@@ -10,6 +10,8 @@ import {
   JobOptions,
   WorkerOptions,
   JobHandler,
+  JobStateInfo,
+  JobInfo,
 } from '../core/types';
 import { Logger } from '../utils/logger';
 
@@ -65,7 +67,10 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
     return this.queueManager.completeJob(queue, jobId);
   }
 
-  async getJobState(queue: string, jobId: string): Promise<string | null> {
+  async getJobState(
+    queue: string,
+    jobId: string,
+  ): Promise<JobStateInfo | null> {
     return this.queueManager.getJobState(queue, jobId);
   }
 
@@ -79,6 +84,10 @@ export class QueueService implements OnModuleInit, OnModuleDestroy {
 
   async getHealthStatus() {
     return this.queueManager.getHealthStatus();
+  }
+
+  async getJobInfo(queue: string, jobId: string): Promise<JobInfo | null> {
+    return this.queueManager.getJobInfo(queue, jobId);
   }
 
   // 获取底层队列管理器实例（用于高级用法）

@@ -13,7 +13,7 @@
 - 📊 队列状态与健康检查
 - 🎯 TypeScript 类型安全
 
----
+---git submodule update --init --recursive
 
 ## 1. 以 Submodule 方式集成
 
