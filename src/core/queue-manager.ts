@@ -47,6 +47,7 @@ export class QueueManager extends EventEmitter {
       password: config.database.password,
       schema: config.database.schema || 'pgboss',
       application_name: config.database.application_name || 'queue-sdk',
+      ssl: config.database.ssl,
     });
 
     this.setupEventHandlers();

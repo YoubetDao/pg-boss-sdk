@@ -9,6 +9,9 @@ export interface DatabaseConfig {
   password: string;
   schema?: string;
   application_name?: string;
+  ssl?: {
+    rejectUnauthorized: boolean;
+  };
 }
 
 // 队列配置

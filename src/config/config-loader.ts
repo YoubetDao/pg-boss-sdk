@@ -15,6 +15,7 @@ export class ConfigLoader {
       password: process.env.DB_PASSWORD || 'postgres',
       schema: process.env.DB_SCHEMA || 'pgboss',
       application_name: process.env.DB_APPLICATION_NAME || 'queue-sdk',
+      ssl: { rejectUnauthorized: false },
     };
 
     const monitoring: MonitoringConfig = {
