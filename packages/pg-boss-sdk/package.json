@@ -1,0 +1,56 @@
+{
+  "name": "@youbetdao/pg-boss-sdk",
+  "version": "1.0.0",
+  "description": "NestJS SDK wrapper for pg-boss PostgreSQL job queue",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youbetdao/pg-boss-sdk.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com",
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rm -rf dist",
+    "rebuild": "pnpm run clean && pnpm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write src/**/*.ts",
+    "prepublishOnly": "pnpm run rebuild"
+  },
+  "author": "YouBetDAO",
+  "dependencies": {
+    "@nestjs/common": "^11.1.3",
+    "@nestjs/core": "^11.1.3",
+    "pg-boss": "^10.3.2",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.2",
+    "@types/node": "^20.19.1",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.0.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "jest": "^29.5.0",
+    "prettier": "^3.0.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.1.3"
+  },
+  "peerDependencies": {
+    "@nestjs/common": "^11.1.3",
+    "@nestjs/core": "^11.1.3"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}

@@ -6,17 +6,33 @@ import {
 import * as fs from 'fs';
 
 export class ConfigLoader {
-  static loadFromEnv(): QueueSDKConfig {
+  static loadFromEnv(
+    postgresql_uri?: string,
+    applicationName?: string,
+  ): QueueSDKConfig {
+    const uri = postgresql_uri || process.env.POSTGRESQL_URI;
+
+    if (!uri) {
+      throw new Error(
+        'Database configuration not found. Please provide postgresql_uri parameter or set POSTGRESQL_URI environment variable.',
+      );
+    }
+
+    const parsedUrl = new URL(uri);
+    const searchParams = new URLSearchParams(parsedUrl.search);
+
     const database: DatabaseConfig = {
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '5432'),
-      database: process.env.DB_DATABASE || 'deepflow',
-      user: process.env.DB_USERNAME || 'postgres',
-      password: process.env.DB_PASSWORD || 'postgres',
+      host: parsedUrl.hostname,
+      port: parseInt(parsedUrl.port || '5432'),
+      database: parsedUrl.pathname.slice(1),
+      user: parsedUrl.username,
+      password: parsedUrl.password,
       schema: process.env.DB_SCHEMA || 'pgboss',
-      application_name: process.env.DB_APPLICATION_NAME || 'queue-sdk',
+      application_name: applicationName || process.env.APPLICATION_NAME,
       ssl:
-        process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+        searchParams.get('sslmode') === 'require'
+          ? { rejectUnauthorized: false }
+          : false,
     };
 
     const monitoring: MonitoringConfig = {

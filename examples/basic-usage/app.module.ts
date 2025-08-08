@@ -11,4 +11,4 @@ import { MaintenanceService } from './maintenance.service';
   ],
   providers: [EmailService, MaintenanceService],
 })
-export class AppModule {} 
+export class AppModule {}
