@@ -1,6 +1,6 @@
 {
   "name": "@youbetdao/pg-boss-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NestJS SDK wrapper for pg-boss PostgreSQL job queue",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
