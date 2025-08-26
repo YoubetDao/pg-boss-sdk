@@ -109,7 +109,8 @@ export class QueueManager extends EventEmitter {
 
       const jobId = await this.boss.send(queue, data, {
         retryLimit: this.config.queue?.retryLimit || 3,
-        retryDelay: this.config.queue?.retryDelay || 5000,
+        retryDelay: this.config.queue?.retryDelay || 5,
+        retryBackoff: true,
         ...options,
       });
 
